@@ -1,0 +1,38 @@
+[data-hsce-img] {
+  border-bottom: 1px dotted #000 !important;
+}
+[data-hsce-img]:hover {
+  background: #ffffd0;
+}
+.hsce-preload {
+  opacity: 0;
+  pointer-events: none;
+  width: 0;
+  height: 0;
+}
+#hsce-card {
+  opacity: 0;
+  pointer-events: none;
+  top: 0;
+  left: 0;
+  position: fixed;
+  z-index: 999;
+  width: 286px;
+  height: 395px;
+  -webkit-filter: drop-shadow(0px 7px 5px rgba(0, 0, 0, 0.5));
+  transition-duration: 0.2s; transition-property: opacity;
+  border-radius: 12px;
+}
+#hsce-card.hsce-active {
+  opacity: 1;
+}
+@keyframes hsceNodeInsertEvent {  
+  from { }
+  to { }  
+}
+[data-author="hearthscan-bot"] {
+  display: none !important;
+}
+[data-type="comment"]:not([data-author="hearthscan-bot"]) .usertext-body {
+  animation-name: hsceNodeInsertEvent;
+}
