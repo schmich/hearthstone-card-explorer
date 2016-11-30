@@ -1,5 +1,5 @@
 [data-hsce-img] {
-  border-bottom: 1px dotted #000 !important;
+  border-bottom: 1px dotted #999 !important;
 }
 [data-hsce-img]:hover {
   background: #ffffd0;
