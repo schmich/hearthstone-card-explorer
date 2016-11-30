@@ -177,15 +177,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
     return;
   }
 
-  let match = false;
-  for (let url of urls) {
-    if (tab.url.match(url)) {
-      match = true;
-      break;
-    }
-  }
-
-  if (!match) {
+  if (!urls.some(url => tab.url.match(url))) {
     return;
   }
 
