@@ -18,7 +18,7 @@ function CardSet() {
         }
         part += phrase[i];
       } else if (part !== null) {
-        if (['the', 'a', 'an', 'in', 'on', 'of'].indexOf(part) < 0) {
+        if (['the', 'a', 'an', 'in', 'on', 'of', 'to'].indexOf(part) < 0) {
           let end = i - 1;
           let newPart = '';
           if ((newPart = part.replace(/^\dx/, '')) && (newPart !== part)) {
@@ -125,7 +125,7 @@ function CardSet() {
   function normalize(name) {
     return name
       .toLowerCase()
-      .replace(/\b(the|a|an|in|on|of)\b/g, '')
+      .replace(/\b(the|a|an|in|on|of|to)\b/g, '')
       .replace(/[^a-z0-9]+/g, '')
       .replace(/(\S{2,})s\b/g, '$1')
       .replace(/(.)\1/g, '$1');
