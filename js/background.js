@@ -98,14 +98,14 @@ function CardSet() {
     for (let realName in repo.cards) {
       let fuzzyName = normalize(realName);
       self.images[fuzzyName] = repo.cards[realName];
-      self.maxWordCount = Math.max(self.maxWordCount, countSpaces(realName));
+      self.maxWordCount = Math.max(self.maxWordCount, countSpaces(realName) + 1);
     }
     
     for (let alias in repo.aliases) {
       let realName = repo.aliases[alias];
       let fuzzyAlias = normalize(alias);
       self.images[fuzzyAlias] = repo.cards[realName];
-      self.maxWordCount = Math.max(self.maxWordCount, countSpaces(realName));
+      self.maxWordCount = Math.max(self.maxWordCount, countSpaces(realName) + 1);
     }
 
     console.log('Card set built.');
