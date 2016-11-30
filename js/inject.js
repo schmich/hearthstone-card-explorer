@@ -24,19 +24,19 @@ function onInject() {
   });
 }
 
-function textNodesUnderAcc(node, acc) {
-  for (node = node.firstChild; node; node = node.nextSibling){
-    if (node.nodeType == 3 && node.textContent.trim() !== "") {
-      acc.push(node);
-    } else {
-      textNodesUnderAcc(node, acc);
+function textNodesUnder(node){
+  function collect(node, acc) {
+    for (node = node.firstChild; node; node = node.nextSibling){
+      if (node.nodeType == 3 && node.textContent.trim() !== "") {
+        acc.push(node);
+      } else {
+        collect(node, acc);
+      }
     }
   }
-}
 
-function textNodesUnder(node){
   let nodes = [];
-  textNodesUnderAcc(node, nodes);
+  collect(node, nodes);
   return nodes;
 }
 
