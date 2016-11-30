@@ -70,7 +70,7 @@ cards = Hash[
 ].values
 
 cdn_map = JSON.parse(File.read(File.join('hearthstone-card-images', 'cdn-map.json')))
-cdn_map = Hash[cdn_map.map { |entry| [entry['id'], entry['path']] }]
+cdn_map = Hash[cdn_map.map { |entry| [entry['id'], entry['short_path']] }]
 
 cards.each do |card|
   name = card['name']
