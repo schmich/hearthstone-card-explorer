@@ -113,8 +113,8 @@ function CardSet() {
 
   function countSpaces(s) {
     let count = 0;
-    for (let i = 0; i < s.length; ++i) {
-      if (s[i] === ' ') {
+    for (let c of s) {
+      if (c === ' ') {
         ++count;
       }
     }
@@ -178,8 +178,8 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
   }
 
   let match = false;
-  for (let i = 0; i < urls.length; ++i) {
-    if (tab.url.match(urls[i])) {
+  for (let url of urls) {
+    if (tab.url.match(url)) {
       match = true;
       break;
     }

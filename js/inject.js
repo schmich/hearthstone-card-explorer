@@ -6,15 +6,15 @@ function onInject() {
   document.body.appendChild(cardImage);
 
   let elements = document.querySelectorAll('[data-type="comment"] .usertext-body, [data-type="link"] .usertext-body, .TopicPost-bodyContent');
-  for (let i = 0; i < elements.length; ++i) {
-    let watcher = scrollMonitor.create(elements[i], 200);
+  for (let element of elements) {
+    let watcher = scrollMonitor.create(element, 200);
     (function (element) {
       watcher.enterViewport(function () {
         detectCards(element);
         this.destroy();
         watcher = null;
       });
-    })(elements[i]);
+    })(element);
   }
 
   document.addEventListener('animationstart', function (e) {
@@ -55,7 +55,7 @@ function preloadImage(imageUrl) {
 
 function detectCards(element) {
   let textNodes = textNodesUnder(element);
-  for (let i = 0; i < textNodes.length; ++i) {
+  for (let textNode of textNodes) {
     (function (node) {
       let text = node.textContent;
       chrome.runtime.sendMessage({ detect: text }, function (matches) {
@@ -96,7 +96,7 @@ function detectCards(element) {
 
         createTargets(targets);
       });
-    })(textNodes[i]);
+    })(textNode);
   }
 }
 
