@@ -51,7 +51,7 @@ function CardSet() {
         let fuzzyName = normalize(text);
         let imageUrl = self.images[fuzzyName];
         if (!imageUrl) {
-          fuzzyName = normalizeDestem(text);
+          fuzzyName = normalizeStem(text);
           imageUrl = self.images[fuzzyName];
           if (!imageUrl) {
             continue;
@@ -139,7 +139,7 @@ function CardSet() {
       .replace(/(.)\1/g, '$1');
   }
   
-  function normalizeDestem(s) {
+  function normalizeStem(s) {
     return s
       .toLowerCase()
       .replace(/\b(the|a|an|in|on|of|to)\b/g, '')
