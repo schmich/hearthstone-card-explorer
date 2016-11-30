@@ -26,7 +26,8 @@ end
 
 repo = {
   'cards' => {},
-  'aliases' => {}
+  'aliases' => {},
+  'exclude' => {}
 }
 
 card_ids = fetch_card_ids
@@ -45,7 +46,15 @@ aliases.each do |alias_name, real_name|
   end
 end
 
+exclude = config['exclude']
+exclude.each do |name|
+  if !card_ids.include?(name)
+    raise "Exclusion '#{name}' does not match any card."
+  end
+end
+
 repo['aliases'] = aliases
+repo['exclude'] = exclude
 
 # There can be multiple cards with the same name.
 # Since we can't distinguish the duplicates, we only
@@ -63,11 +72,9 @@ cards = Hash[
 cdn_map = JSON.parse(File.read(File.join('hearthstone-card-images', 'cdn-map.json')))
 cdn_map = Hash[cdn_map.map { |entry| [entry['id'], entry['path']] }]
 
-excluded_cards = Set.new(config['exclude'])
-
 cards.each do |card|
   name = card['name']
-  next if excluded_cards.include?(name)
+  next if ['hero power', 'hero'].include?(card['type'])
 
   id = card_ids[name]
   image = cdn_map[id]
