@@ -39,6 +39,25 @@ function CardSet() {
     return [starts, ends, parts];
   }
 
+  function findImage(text) {
+    let image, name = null;
+    for (name of fuzzyNames(text)) {
+      image = self.images[name];
+      if (image) {
+        break;
+      }
+    }
+
+    if (self.exclude.has(name)) {
+      let isBracketed = (text[0] === '[' && text[1] === '[');
+      if (!isBracketed) {
+        return false;
+      }
+    }
+
+    return image || false;
+  }
+
   this.detect = function (phrase) {
     let detected = [];
 
@@ -47,22 +66,9 @@ function CardSet() {
     for (let start = 0; start < parts.length; ++start) {
       for (let end = Math.min(parts.length, start + self.maxWordCount); end > start; --end) {
         let text = parts.slice(start, end).join(' ');
-
-        let fuzzyName = normalize(text);
-        let imageUrl = self.images[fuzzyName];
+        var imageUrl = findImage(text);
         if (!imageUrl) {
-          fuzzyName = normalizeStem(text);
-          imageUrl = self.images[fuzzyName];
-          if (!imageUrl) {
-            continue;
-          }
-        }
-
-        if (this.exclude.has(fuzzyName)) {
-          let isLookup = (text[0] === '[' && text[1] === '[');
-          if (!isLookup) {
-            continue;
-          }
+          continue;
         }
 
         let startIndex = starts[start];
@@ -109,7 +115,7 @@ function CardSet() {
       self.images[fuzzyName] = repo.cards[realName];
       self.maxWordCount = Math.max(self.maxWordCount, countSpaces(realName) + 1);
     }
-    
+
     for (let alias in repo.aliases) {
       let realName = repo.aliases[alias];
       let fuzzyAlias = normalize(alias);
@@ -132,20 +138,36 @@ function CardSet() {
   }
 
   function normalize(s) {
-    return s
-      .toLowerCase()
+    return s.toLowerCase()
       .replace(/\b(the|a|an|in|on|of|to)\b/g, '')
       .replace(/[^a-z0-9]+/g, '')
       .replace(/(.)\1/g, '$1');
   }
+
+  function* fuzzyNames(name) {
+    let norm = normalize(name);
+    yield norm;
+    for (let stem of stems(norm)) {
+      yield stem;
+    }
+  }
   
-  function normalizeStem(s) {
-    return s
-      .toLowerCase()
-      .replace(/\b(the|a|an|in|on|of|to)\b/g, '')
-      .replace(/[^a-z0-9]+/g, '')
-      .replace(/(\S{3,}?)(s|es|ed|ing)\b/g, '$1')
-      .replace(/(.)\1/g, '$1');
+  function* stems(s) {
+    if (s.length >= 6 && s.endsWith('ing')) {
+      yield s.slice(0, -3);
+    }
+
+    if (s.length >= 4 && s.endsWith('s')) {
+      yield s.slice(0, -1);
+    }
+
+    if (s.length >= 5 && s.endsWith('es')) {
+      yield s.slice(0, -2);
+    }
+
+    if (s.length >= 5 && s.endsWith('ed')) {
+      yield s.slice(0, -2);
+    }
   }
 
   function absoluteImageUrl(imageUrl) {
@@ -214,7 +236,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
   chrome.tabs.insertCSS(tabId, { file: 'css/style.css', runAt: 'document_start' }, function () {
     chrome.tabs.executeScript(tabId, { file: 'lib/ScrollMonitor.js', runAt: 'document_end' }, function () {
       chrome.tabs.executeScript(tabId, { file: 'js/inject.js', runAt: 'document_end' }, function () {
-        console.log('Injected into ' + tab.url);
+        // Ready.
       });
     });
   });
