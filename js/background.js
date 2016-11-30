@@ -85,15 +85,9 @@ function CardSet() {
   };
 
   this.update = function () {
-    let cardsUrl = 'https://gist.githubusercontent.com/schmich/390515ea1fb19d6b1cd419b2deb28324/raw';
-
-    // TODO: Figure out caching.
-    //let options = { cache: false, headers: {} };
-    //options.headers['If-None-Match'] = '"587f5b488c3b38a961b34dab5cde06eba1c36987"';
-    let options = { cache: false };
-
-    qwest.get(cardsUrl, null, options).then(function (xhr, resp) {
-      console.log(xhr.getResponseHeader('etag'));
+    let repoUrl = 'https://gist.githubusercontent.com/schmich/390515ea1fb19d6b1cd419b2deb28324/raw';
+    let options = { cache: true };
+    qwest.get(repoUrl, null, options).then(function (xhr, resp) {
       let repo = JSON.parse(resp);
       let entry = { repo: repo };
       chrome.storage.local.set(entry);
@@ -104,8 +98,6 @@ function CardSet() {
   };
 
   function buildCardSet(repo) {
-    console.log('Building card set.');
-
     self.images = {};
     self.exclude = new Set(repo.exclude.map(e => normalize(e)));
     self.maxWordCount = 0;
@@ -122,8 +114,6 @@ function CardSet() {
       self.images[fuzzyAlias] = repo.cards[realName];
       self.maxWordCount = Math.max(self.maxWordCount, countSpaces(realName) + 1);
     }
-
-    console.log('Card set built.');
   }
 
   function countSpaces(s) {
@@ -171,7 +161,7 @@ function CardSet() {
   }
 
   function absoluteImageUrl(imageUrl) {
-    if (imageUrl.match(/^https?:/)) {
+    if (imageUrl.startsWith('https:') || imageUrl.startsWith('http:')) {
       return imageUrl;
     } else {
       return 'https://cdn.rawgit.com/schmich/hearthstone-card-images/' + imageUrl;
@@ -192,7 +182,6 @@ function CardSet() {
       console.log('Using cached repo.');
       buildCardSet(repo);
     } else {
-      console.log('Fetching current repo.');
       self.update();
     }
   });
@@ -208,16 +197,13 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 
 chrome.runtime.onInstalled.addListener(function () {
   chrome.storage.local.clear();
-  Cards.update();
 });
 
 let Cards = new CardSet();
 
 setInterval(function () {
   Cards.update();
-}, 60 * 60 * 1000);
-
-qwest.setDefaultOptions({ cache: true });
+}, 30 * 60 * 1000);
 
 let urls = [
   /^https?:\/\/www\.reddit\.com\/r\/(hearthstone|competitivehs|customhearthstone|hearthstonecirclejerk|thehearth|arenahs|hstournaments|hearthdecklists|hscoaching|hspulls|12winarenalog|hearthstonevods)\/comments\//i,
@@ -236,8 +222,10 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
   chrome.tabs.insertCSS(tabId, { file: 'css/style.css', runAt: 'document_start' }, function () {
     chrome.tabs.executeScript(tabId, { file: 'lib/ScrollMonitor.js', runAt: 'document_end' }, function () {
       chrome.tabs.executeScript(tabId, { file: 'js/inject.js', runAt: 'document_end' }, function () {
-        // Ready.
+        // Injected.
       });
     });
   });
 });
+
+console.log('Extension loaded.');
