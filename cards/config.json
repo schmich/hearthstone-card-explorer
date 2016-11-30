@@ -42,6 +42,7 @@
     "kings": "Blessing of Kings",
     "bok": "Blessing of Kings",
     "ooze": "Acidic Swamp Ooze",
+    "acidic ooze": "Acidic Swamp Ooze",
     "swamp ooze": "Acidic Swamp Ooze",
     "toxic ooze": "Toxic Sewer Ooze",
     "sewer ooze": "Toxic Sewer Ooze",
@@ -579,10 +580,10 @@
     "drakon operative": "Drakonid Operative",
     "counterfit coin": "Counterfeit Coin",
     "roots": "Living Roots",
-    "Pirana Launcher": "Piranha Launcher",
-    "Pyrana Launcher": "Piranha Launcher",
-    "Pyranha Launcher": "Piranha Launcher",
-    "Disp Kodo": "Dispatch Kodo",
+    "pirana launcher": "Piranha Launcher",
+    "pyrana launcher": "Piranha Launcher",
+    "pyranha launcher": "Piranha Launcher",
+    "disp kodo": "Dispatch Kodo",
     "firey bat": "Fiery Bat",
     "ravenholt assassin": "Ravenholdt Assassin",
     "nefarion": "Nefarian",
@@ -591,7 +592,8 @@
     "wrathian": "Wrathion",
     "grimy gadget": "Grimy Gadgeteer",
     "gadgeteer": "Grimy Gadgeteer",
-    "First Mate": "N'Zoth's First Mate",
-    "KT": "Kel'Thuzad"
+    "first mate": "N'Zoth's First Mate",
+    "kt": "Kel'Thuzad",
+    "pirate cannon": "Ship's Cannon"
   }
 }

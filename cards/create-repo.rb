@@ -41,6 +41,10 @@ release_image_map = Hash[
 config = JSON.parse(File.read('config.json'))
 aliases = config['aliases']
 aliases.each do |alias_name, real_name|
+  if alias_name =~ /[A-Z]/
+    raise "Alias '#{alias_name}' has uppercase characters."
+  end
+
   if !card_ids.include?(real_name)
     raise "Alias '#{alias_name}' refers to missing card: '#{real_name}'."
   end
