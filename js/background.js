@@ -1,7 +1,7 @@
 function CardSet() {
   let self = this;
 
-  function split(phrase) {
+  function tokenize(phrase) {
     phrase = phrase.toLowerCase();
     let starts = [];
     let ends = [];
@@ -10,8 +10,8 @@ function CardSet() {
     let part = null;
     let start = 0;
     for (let i = 0; i <= phrase.length; ++i) {
-      let charCode = phrase.charCodeAt(i);
-      if ((charCode >= 97 && charCode <= 122) || (charCode >= 48 && charCode <= 57)) {
+      let code = phrase.charCodeAt(i);
+      if ((code >= 97 && code <= 122) || (code >= 48 && code <= 57) || code == 91 || code == 93) {
         if (part === null) {
           part = '';
           start = i;
@@ -39,18 +39,10 @@ function CardSet() {
     return [starts, ends, parts];
   }
 
-  function absoluteImageUrl(imageUrl) {
-    if (imageUrl.match(/^https?:/)) {
-      return imageUrl;
-    } else {
-      return 'https://cdn.rawgit.com/schmich/hearthstone-card-images/' + imageUrl;
-    }
-  }
-
   this.detect = function (phrase) {
     let detected = [];
 
-    let [starts, ends, parts] = split(phrase);
+    let [starts, ends, parts] = tokenize(phrase);
 
     for (let start = 0; start < parts.length; ++start) {
       for (let end = Math.min(parts.length, start + self.maxWordCount); end > start; --end) {
@@ -66,10 +58,18 @@ function CardSet() {
           }
         }
 
+        if (this.exclude.has(fuzzyName)) {
+          let isLookup = (text[0] === '[' && text[1] === '[');
+          if (!isLookup) {
+            continue;
+          }
+        }
+
         let startIndex = starts[start];
         let endIndex = ends[end - 1] + 1;
         let url = absoluteImageUrl(imageUrl);
-        detected.push([fuzzyName, startIndex, endIndex, url]);
+        let newText = removeBrackets(phrase.substring(startIndex, endIndex)).trim();
+        detected.push([newText, startIndex, endIndex, url]);
         start = end - 1;
         break;
       }
@@ -101,6 +101,7 @@ function CardSet() {
     console.log('Building card set.');
 
     self.images = {};
+    self.exclude = new Set(repo.exclude.map(e => normalize(e)));
     self.maxWordCount = 0;
 
     for (let realName in repo.cards) {
@@ -147,7 +148,20 @@ function CardSet() {
       .replace(/(.)\1/g, '$1');
   }
 
+  function absoluteImageUrl(imageUrl) {
+    if (imageUrl.match(/^https?:/)) {
+      return imageUrl;
+    } else {
+      return 'https://cdn.rawgit.com/schmich/hearthstone-card-images/' + imageUrl;
+    }
+  }
+
+  function removeBrackets(text) {
+    return text.replace(/(\[\[)|(\]\])/g, '');
+  }
+
   this.images = {};
+  this.exclude = new Set();
   this.maxWordCount = 0;
 
   chrome.storage.local.get('repo', function (entry) {

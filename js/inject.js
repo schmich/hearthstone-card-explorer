@@ -62,35 +62,13 @@ function detectCards(element) {
         let targets = [];
 
         for (let match of matches) {
-          let [normalizedPhrase, start, end, imageUrl] = match;
+          let [text, start, end, imageUrl] = match;
 
-          let phrase = '';
           let range = document.createRange();
-          let isBracketed = false;
+          range.setStart(node, start);
+          range.setEnd(node, end);
 
-          let bracketPhrase = text.substring(start - 2, end + 2);
-          let bracketMatch = bracketPhrase.match(/^\[\[(.*)\]\]$/);
-          if (bracketMatch) {
-            phrase = bracketMatch[1];
-            range.setStart(node, start - 2);
-            range.setEnd(node, end + 2);
-            isBracketed = true;
-          } else {
-            phrase = text.substring(start, end);
-            range.setStart(node, start);
-            range.setEnd(node, end);
-          }
-
-          if (!isBracketed) {
-            // Note: these are not typos. They are normalized versions
-            // of words excluded from highlighting.
-            let excludeList = ['blizard', 'pirate', 'dream', 'silence', 'duplicate', 'murloc', 'beast', 'charge'];
-            if (excludeList.indexOf(normalizedPhrase) >= 0) {
-              continue;
-            }
-          }
-
-          targets.push([range, phrase, imageUrl]);
+          targets.push([range, text, imageUrl]);
           preloadImage(imageUrl);
         }
 
@@ -102,11 +80,11 @@ function detectCards(element) {
 
 function createTargets(targets) {
   for (let target of targets) {
-    let [range, phrase, imageUrl] = target;
+    let [range, text, imageUrl] = target;
     let span = document.createElement('span');
     span.dataset.hsceImg = imageUrl;
     range.surroundContents(span);
-    span.textContent = phrase;
+    span.textContent = text;
     addTargetEvents(span);
   }
 }
