@@ -58,8 +58,55 @@ function CardSet() {
     return image || false;
   }
 
+  this.debug = function (phrase) {
+    function replace(s, left, right, text) {
+      return s.substr(0, left) + text + s.substr(right);
+    }
+
+    function replaceMatches(phrase, matches, fn) {
+      let result = phrase;
+      let offset = 0;
+
+      for (let i = 0; i < matches.length; ++i) {
+        let match = matches[i];
+        let oldLen = result.length;
+        let [newText, left, right, url] = match;
+
+        result = replace(result, left + offset, right + offset, fn(i, match));
+        offset += result.length - oldLen;
+      }
+
+      return result;
+    }
+
+    let matches = this.detect(phrase);
+    console.debug(matches);
+
+    if (!matches.length) {
+      console.log('ø No matches.');
+      return;
+    }
+
+    let resultPhrase = replaceMatches(phrase, matches, (i, match) => match[0]);
+    let debugPhrase = replaceMatches(phrase, matches, (i, match) => `%c${match[0]}%c`);
+
+    let args = [];
+    for (let match of matches) {
+      args.push('color:#00f');
+      args.push('color:#000');
+    }
+
+    console.log(`-> ${debugPhrase}`, ...args);
+
+    for (let match of matches) {
+      console.log(`%c${match[0]}%c:${match[3]}`, 'color:#00f', 'color:#000');
+    }
+
+    console.log(`-> ${resultPhrase}`);
+  }
+
   this.detect = function (phrase) {
-    let detected = [];
+    let matches = [];
 
     let [starts, ends, parts] = tokenize(phrase);
 
@@ -75,13 +122,14 @@ function CardSet() {
         let endIndex = ends[end - 1] + 1;
         let url = absoluteImageUrl(imageUrl);
         let newText = removeBrackets(phrase.substring(startIndex, endIndex)).trim();
-        detected.push([newText, startIndex, endIndex, url]);
+        matches.push([newText, startIndex, endIndex, url]);
+
         start = end - 1;
         break;
       }
     }
 
-    return detected;
+    return matches;
   };
 
   this.update = function () {
