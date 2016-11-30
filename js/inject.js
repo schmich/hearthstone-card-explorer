@@ -1,8 +1,28 @@
 (function () {
 
-let cardImage = document.createElement('img');
-cardImage.setAttribute('id', 'hsce-card');
-document.body.appendChild(cardImage);
+function onInject() {
+  let cardImage = document.createElement('img');
+  cardImage.setAttribute('id', 'hsce-card');
+  document.body.appendChild(cardImage);
+
+  let elements = document.querySelectorAll('[data-type="comment"] .usertext-body, [data-type="link"] .usertext-body, .TopicPost-bodyContent');
+  for (let i = 0; i < elements.length; ++i) {
+    let watcher = scrollMonitor.create(elements[i], 200);
+    (function (element) {
+      watcher.enterViewport(function () {
+        detectCards(element);
+        this.destroy();
+        watcher = null;
+      });
+    })(elements[i]);
+  }
+
+  document.addEventListener('animationstart', function (e) {
+    if (e.animationName === 'hsceNodeInsertEvent') {
+      detectCards(e.target);
+    }
+  });
+}
 
 function textNodesUnderAcc(node, acc) {
   for (node = node.firstChild; node; node = node.nextSibling){
@@ -20,32 +40,20 @@ function textNodesUnder(node){
   return nodes;
 }
 
-let elements = document.querySelectorAll('[data-type="comment"] .usertext-body, [data-type="link"] .usertext-body, .TopicPost-bodyContent');
-for (let i = 0; i < elements.length; ++i) {
-  let watcher = scrollMonitor.create(elements[i], 200);
-  (function (element) {
-    watcher.enterViewport(function () {
-      processElement(element);
-      this.destroy();
-      watcher = null;
-    });
-  })(elements[i]);
-}
-
-let preloadedImages = {};
 function preloadImage(imageUrl) {
-  if (preloadedImages[imageUrl]) {
+  preloadImage.loaded = preloadImage.loaded || {};
+  if (preloadImage.loaded[imageUrl]) {
     return;
   }
 
   let e = document.createElement('img');
   e.classList.add('hsce-preload');
   e.setAttribute('src', imageUrl);
-  preloadedImages[imageUrl] = true;
+  preloadImage.loaded[imageUrl] = true;
   document.body.appendChild(e);
 }
 
-function processElement(element) {
+function detectCards(element) {
   let textNodes = textNodesUnder(element);
   for (let i = 0; i < textNodes.length; ++i) {
     (function (node) {
@@ -86,24 +94,24 @@ function processElement(element) {
           preloadImage(imageUrl);
         }
 
-        updateTargets(targets);
+        createTargets(targets);
       });
     })(textNodes[i]);
   }
 }
 
-function updateTargets(targets) {
+function createTargets(targets) {
   for (let target of targets) {
     let [range, phrase, imageUrl] = target;
     let span = document.createElement('span');
     span.dataset.hsceImg = imageUrl;
     range.surroundContents(span);
     span.textContent = phrase;
-    addEvents(span);
+    addTargetEvents(span);
   }
 }
 
-function addEvents(target) {
+function addTargetEvents(target) {
   let preview = false;
 
   function scrollHandler() {
@@ -166,10 +174,6 @@ function positionCard(targetElement, cardElement) {
   cardElement.style.top = topPos + 'px';
 }
 
-document.addEventListener('animationstart', function (e) {
-  if (e.animationName === 'hsceNodeInsertEvent') {
-    processElement(e.target);
-  }
-});
+onInject();
 
 })();
