@@ -48,8 +48,8 @@ end
 
 exclude = config['exclude']
 exclude.each do |name|
-  if !card_ids.include?(name)
-    raise "Exclusion '#{name}' does not match any card."
+  if !card_ids.include?(name) && !aliases.keys.map(&:downcase).include?(name.downcase)
+    raise "Exclusion '#{name}' does not match any card or alias."
   end
 end
 
