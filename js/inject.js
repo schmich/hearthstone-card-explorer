@@ -1,7 +1,8 @@
-let body = document.querySelector('body');
+(function () {
+
 let cardImage = document.createElement('img');
 cardImage.setAttribute('id', 'hsce-card');
-body.appendChild(cardImage);
+document.body.appendChild(cardImage);
 
 function textNodesUnderAcc(node, acc) {
   for (node = node.firstChild; node; node = node.nextSibling){
@@ -41,7 +42,7 @@ function preloadImage(imageUrl) {
   e.classList.add('hsce-preload');
   e.setAttribute('src', imageUrl);
   preloadedImages[imageUrl] = true;
-  body.appendChild(e);
+  document.body.appendChild(e);
 }
 
 function processElement(element) {
@@ -142,8 +143,8 @@ function addEvents(target) {
   });
 }
 
-function positionCard(refElement, cardElement) {
-  let rect = refElement.getBoundingClientRect();
+function positionCard(targetElement, cardElement) {
+  let rect = targetElement.getBoundingClientRect();
   let height = cardElement.offsetHeight;
   let width = cardElement.offsetWidth;
 
@@ -170,3 +171,5 @@ document.addEventListener('animationstart', function (e) {
     processElement(e.target);
   }
 });
+
+})();
