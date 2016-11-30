@@ -18,7 +18,11 @@
     "The Eye",
     "Pawn",
     "Brawl",
-    "Chicken"
+    "Chicken",
+    "Candle",
+    "Frog",
+    "Rat",
+    "Scar"
   ],
   "aliases": {
     "po": "Power Overwhelming",
@@ -99,12 +103,16 @@
     "billy": "Murloc Raider",
     "y'saarj": "Y'Shaarj, Rage Unbound",
     "y'shaarj": "Y'Shaarj, Rage Unbound",
+    "y'shraaj": "Y'Shaarj, Rage Unbound",
     "rafaam": "Arch-Thief Rafaam",
     "krush": "King Krush",
     "jaraxxus": "Lord Jaraxxus",
     "jaraxus": "Lord Jaraxxus",
     "mekgineer": "Mekgineer Thermaplugg",
     "thermaplugg": "Mekgineer Thermaplugg",
+    "kraken": "North Sea Kraken",
+    "krayken": "North Sea Kraken",
+    "north sea krayken": "North Sea Kraken",
     "north korea kraken": "North Sea Kraken",
     "soggoth": "Soggoth the Slitherer",
     "al'akir": "Al'Akir the Windlord",
@@ -250,6 +258,7 @@
     "bolt": "Lightning Bolt",
     "chicken": "Angry Chicken",
     "paveling book": "Babbling Book",
+    "memeing book": "Babbling Book",
     "cleric": "Northshire Cleric",
     "finley": "Sir Finley Mrrgglton",
     "sir finley": "Sir Finley Mrrgglton",
@@ -303,6 +312,7 @@
     "arcane missles": "Arcane Missiles",
     "greater arcane missles": "Greater Arcane Missiles",
     "swashburgalar": "Swashburglar",
+    "swashburgular": "Swashburglar",
     "burglar": "Swashburglar",
     "burgalar": "Swashburglar",
     "ferryman": "Gadgetzan Ferryman",
@@ -566,7 +576,10 @@
     "counterfit coin": "Counterfeit Coin",
     "roots": "Living Roots",
     "Pirana Launcher": "Piranha Launcher",
+    "Pyrana Launcher": "Piranha Launcher",
+    "Pyranha Launcher": "Piranha Launcher",
     "Disp Kodo": "Dispatch Kodo",
-    "firey bat": "Fiery Bat"
+    "firey bat": "Fiery Bat",
+    "ravenholt assassin": "Ravenholdt Assassin"
   }
 }
