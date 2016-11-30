@@ -1,10 +1,10 @@
-var body = document.querySelector('body');
-var cardImage = document.createElement('img');
+let body = document.querySelector('body');
+let cardImage = document.createElement('img');
 cardImage.setAttribute('id', 'hsce-card');
 body.appendChild(cardImage);
 
 function textNodesUnderAcc(node, acc) {
-  for (var node = node.firstChild; node; node = node.nextSibling){
+  for (node = node.firstChild; node; node = node.nextSibling){
     if (node.nodeType == 3 && node.textContent.trim() !== "") {
       acc.push(node);
     } else {
@@ -14,14 +14,14 @@ function textNodesUnderAcc(node, acc) {
 }
 
 function textNodesUnder(node){
-  var nodes = [];
+  let nodes = [];
   textNodesUnderAcc(node, nodes);
   return nodes;
 }
 
 let elements = document.querySelectorAll('[data-type="comment"] .usertext-body, [data-type="link"] .usertext-body, .TopicPost-bodyContent');
-for (var i = 0; i < elements.length; ++i) {
-  var watcher = scrollMonitor.create(elements[i], 200);
+for (let i = 0; i < elements.length; ++i) {
+  let watcher = scrollMonitor.create(elements[i], 200);
   (function (element) {
     watcher.enterViewport(function () {
       processElement(element);
@@ -31,13 +31,13 @@ for (var i = 0; i < elements.length; ++i) {
   })(elements[i]);
 }
 
-var preloadedImages = {};
+let preloadedImages = {};
 function preloadImage(imageUrl) {
   if (preloadedImages[imageUrl]) {
     return;
   }
 
-  var e = document.createElement('img');
+  let e = document.createElement('img');
   e.classList.add('hsce-preload');
   e.setAttribute('src', imageUrl);
   preloadedImages[imageUrl] = true;
@@ -45,22 +45,22 @@ function preloadImage(imageUrl) {
 }
 
 function processElement(element) {
-  var textNodes = textNodesUnder(element);
-  for (var i = 0; i < textNodes.length; ++i) {
+  let textNodes = textNodesUnder(element);
+  for (let i = 0; i < textNodes.length; ++i) {
     (function (node) {
-      var text = node.textContent;
+      let text = node.textContent;
       chrome.runtime.sendMessage({ detect: text }, function (matches) {
         let targets = [];
 
         for (let match of matches) {
           let [normalizedPhrase, start, end, imageUrl] = match;
 
-          var phrase = '';
-          var range = document.createRange();
-          var isBracketed = false;
+          let phrase = '';
+          let range = document.createRange();
+          let isBracketed = false;
 
-          var bracketPhrase = text.substring(start - 2, end + 2);
-          var bracketMatch = bracketPhrase.match(/^\[\[(.*)\]\]$/);
+          let bracketPhrase = text.substring(start - 2, end + 2);
+          let bracketMatch = bracketPhrase.match(/^\[\[(.*)\]\]$/);
           if (bracketMatch) {
             phrase = bracketMatch[1];
             range.setStart(node, start - 2);
@@ -81,8 +81,8 @@ function processElement(element) {
             }
           }
 
-          preloadImage(imageUrl);
           targets.push([range, phrase, imageUrl]);
+          preloadImage(imageUrl);
         }
 
         updateTargets(targets);
@@ -94,7 +94,7 @@ function processElement(element) {
 function updateTargets(targets) {
   for (let target of targets) {
     let [range, phrase, imageUrl] = target;
-    var span = document.createElement('span');
+    let span = document.createElement('span');
     span.dataset.hsceImg = imageUrl;
     range.surroundContents(span);
     span.textContent = phrase;
@@ -102,8 +102,8 @@ function updateTargets(targets) {
   }
 }
 
-function addEvents(ref) {
-  var preview = false;
+function addEvents(target) {
+  let preview = false;
 
   function scrollHandler() {
     window.removeEventListener('scroll', scrollHandler);
@@ -112,16 +112,16 @@ function addEvents(ref) {
 
   function hideCard() {
     preview = false;
-    var card = document.getElementById('hsce-card');
+    let card = document.getElementById('hsce-card');
     card.classList.remove('hsce-active');
     window.removeEventListener('scroll', scrollHandler);
   }
 
-  ref.addEventListener('mouseover', function (refElement) {
+  target.addEventListener('mouseover', function () {
     preview = true;
-    var refElement = this;
+    let self = this;
 
-    var card = document.getElementById('hsce-card');
+    let card = document.getElementById('hsce-card');
     card.removeAttribute('src');
     card.setAttribute('src', this.dataset.hsceImg);
 
@@ -130,31 +130,31 @@ function addEvents(ref) {
         return;
       }
 
-      positionCard(refElement, card);
+      positionCard(self, card);
       card.classList.add('hsce-active');
     }, 0);
 
     window.addEventListener('scroll', scrollHandler);
   });
 
-  ref.addEventListener('mouseout', function (e) {
+  target.addEventListener('mouseout', function (e) {
     hideCard();
   });
 }
 
 function positionCard(refElement, cardElement) {
-  var rect = refElement.getBoundingClientRect();
-  var height = cardElement.offsetHeight;
-  var width = cardElement.offsetWidth;
+  let rect = refElement.getBoundingClientRect();
+  let height = cardElement.offsetHeight;
+  let width = cardElement.offsetWidth;
 
-  var space = 5;
-  var leftPos = rect.right + space;
+  let space = 5;
+  let leftPos = rect.right + space;
   if (leftPos + width > window.innerWidth) {
     leftPos = Math.max(rect.left - width - space, 0);
   }
 
-  var topPos = ((rect.top + rect.bottom) / 2) - height / 2;
-  var overflow = (topPos + height) - window.innerHeight;
+  let topPos = ((rect.top + rect.bottom) / 2) - height / 2;
+  let overflow = (topPos + height) - window.innerHeight;
   if (overflow > 0) {
     topPos -= overflow; 
   }
