@@ -144,7 +144,7 @@ function CardSet() {
       .toLowerCase()
       .replace(/\b(the|a|an|in|on|of|to)\b/g, '')
       .replace(/[^a-z0-9]+/g, '')
-      .replace(/(\S{3,})(s|es|ed|ing)\b/g, '$1')
+      .replace(/(\S{3,}?)(s|es|ed|ing)\b/g, '$1')
       .replace(/(.)\1/g, '$1');
   }
 
