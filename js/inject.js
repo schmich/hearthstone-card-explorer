@@ -152,6 +152,9 @@ function positionCard(targetElement, cardElement) {
   cardElement.style.top = topPos + 'px';
 }
 
-onInject();
+if (!window.hsceInjected) {
+  onInject();
+  window.hsceInjected = true;
+}
 
 })();

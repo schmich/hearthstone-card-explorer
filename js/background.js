@@ -197,6 +197,12 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 
 chrome.runtime.onInstalled.addListener(function () {
   chrome.storage.local.clear();
+
+  chrome.tabs.query({}, function (tabs) {
+    for (let tab of tabs) {
+      tryInject(tab);
+    }
+  });
 });
 
 let Cards = new CardSet();
@@ -205,27 +211,31 @@ setInterval(function () {
   Cards.update();
 }, 30 * 60 * 1000);
 
-let urls = [
-  /^https?:\/\/www\.reddit\.com\/r\/(hearthstone|competitivehs|customhearthstone|hearthstonecirclejerk|thehearth|arenahs|hstournaments|hearthdecklists|hscoaching|hspulls|12winarenalog|hearthstonevods)\/comments\//i,
-  /^https?:\/\/.*\.battle\.net\/forums\/[^\\]+\/hearthstone\/topic/i
-];
+function tryInject(tab) {
+  let urls = [
+    /^https?:\/\/www\.reddit\.com\/r\/(hearthstone|competitivehs|customhearthstone|hearthstonecirclejerk|thehearth|arenahs|hstournaments|hearthdecklists|hscoaching|hspulls|12winarenalog|hearthstonevods)\/comments\//i,
+    /^https?:\/\/.*\.battle\.net\/forums\/[^\\]+\/hearthstone\/topic/i
+  ];
+
+  if (!urls.some(url => tab.url.match(url))) {
+    return;
+  }
+
+  chrome.tabs.insertCSS(tab.id, { file: 'css/style.css', runAt: 'document_start' }, function () {
+    chrome.tabs.executeScript(tab.id, { file: 'lib/ScrollMonitor.js', runAt: 'document_end' }, function () {
+      chrome.tabs.executeScript(tab.id, { file: 'js/inject.js', runAt: 'document_end' }, function () {
+        // Injected.
+      });
+    });
+  });
+}
 
 chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
   if (changeInfo.status !== 'loading') {
     return;
   }
 
-  if (!urls.some(url => tab.url.match(url))) {
-    return;
-  }
-
-  chrome.tabs.insertCSS(tabId, { file: 'css/style.css', runAt: 'document_start' }, function () {
-    chrome.tabs.executeScript(tabId, { file: 'lib/ScrollMonitor.js', runAt: 'document_end' }, function () {
-      chrome.tabs.executeScript(tabId, { file: 'js/inject.js', runAt: 'document_end' }, function () {
-        // Injected.
-      });
-    });
-  });
+  tryInject(tab);
 });
 
 console.log('Extension loaded.');
