@@ -54,16 +54,24 @@ function CardSet() {
 
     for (let start = 0; start < parts.length; ++start) {
       for (let end = Math.min(parts.length, start + self.maxWordCount); end > start; --end) {
-        let fuzzyName = normalize(parts.slice(start, end).join(' '));
+        let text = parts.slice(start, end).join(' ');
+
+        let fuzzyName = normalize(text);
         let imageUrl = self.images[fuzzyName];
-        if (imageUrl) {
-          let startIndex = starts[start];
-          let endIndex = ends[end - 1] + 1;
-          let url = absoluteImageUrl(imageUrl);
-          detected.push([fuzzyName, startIndex, endIndex, url]);
-          start = end - 1;
-          break;
+        if (!imageUrl) {
+          fuzzyName = normalizeDestem(text);
+          imageUrl = self.images[fuzzyName];
+          if (!imageUrl) {
+            continue;
+          }
         }
+
+        let startIndex = starts[start];
+        let endIndex = ends[end - 1] + 1;
+        let url = absoluteImageUrl(imageUrl);
+        detected.push([fuzzyName, startIndex, endIndex, url]);
+        start = end - 1;
+        break;
       }
     }
 
@@ -122,12 +130,20 @@ function CardSet() {
     return count;
   }
 
-  function normalize(name) {
-    return name
+  function normalize(s) {
+    return s
       .toLowerCase()
       .replace(/\b(the|a|an|in|on|of|to)\b/g, '')
       .replace(/[^a-z0-9]+/g, '')
-      .replace(/(\S{2,})s\b/g, '$1')
+      .replace(/(.)\1/g, '$1');
+  }
+  
+  function normalizeDestem(s) {
+    return s
+      .toLowerCase()
+      .replace(/\b(the|a|an|in|on|of|to)\b/g, '')
+      .replace(/[^a-z0-9]+/g, '')
+      .replace(/(\S{3,})(s|es|ed|ing)\b/g, '$1')
       .replace(/(.)\1/g, '$1');
   }
 
