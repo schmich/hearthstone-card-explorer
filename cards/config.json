@@ -22,7 +22,9 @@
     "Candle",
     "Frog",
     "Rat",
-    "Scar"
+    "Scar",
+    "Barrel",
+    "Knife"
   ],
   "aliases": {
     "po": "Power Overwhelming",
@@ -160,6 +162,7 @@
     "tbk": "The Black Knight",
     "mistcaller": "The Mistcaller",
     "gallywix": "Trade Prince Gallywix",
+    "wilfred": "Wilfred Fizzlebang",
     "fizzlebang": "Wilfred Fizzlebang",
     "fon": "Force of Nature",
     "roar": "Savage Roar",
@@ -339,6 +342,7 @@
     "patron": "Grim Patron",
     "rivendare": "Baron Rivendare",
     "talonpriest": "Kabal Talonpriest",
+    "kabal talon": "Kabal Talonpriest",
     "shaku": "Shaku, the Collector",
     "socialite": "Gadgetzan Socialite",
     "doppelganger": "Doppelgangster",
@@ -567,11 +571,11 @@
     "sinister": "Sinister Strike",
     "uldaman": "Keeper of Uldaman",
     "force tank": "Force-Tank MAX",
-    "infernal": "Dread Infernal",
     "geode": "Mana Geode",
     "divine favour": "Divine Favor",
     "diety rat": "Dirty Rat",
     "operative": "Drakonid Operative",
+    "drak op": "Drakonid Operative",
     "drakon operative": "Drakonid Operative",
     "counterfit coin": "Counterfeit Coin",
     "roots": "Living Roots",
@@ -580,6 +584,14 @@
     "Pyranha Launcher": "Piranha Launcher",
     "Disp Kodo": "Dispatch Kodo",
     "firey bat": "Fiery Bat",
-    "ravenholt assassin": "Ravenholdt Assassin"
+    "ravenholt assassin": "Ravenholdt Assassin",
+    "nefarion": "Nefarian",
+    "nefarien": "Nefarian",
+    "dw": "Deathwing",
+    "wrathian": "Wrathion",
+    "grimy gadget": "Grimy Gadgeteer",
+    "gadgeteer": "Grimy Gadgeteer",
+    "First Mate": "N'Zoth's First Mate",
+    "KT": "Kel'Thuzad"
   }
 }
