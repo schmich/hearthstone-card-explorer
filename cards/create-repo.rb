@@ -38,6 +38,8 @@ release_image_map = Hash[
   }
 ]
 
+puts 'Building repo.'
+
 config = JSON.parse(File.read('config.json'))
 aliases = config['aliases']
 aliases.each do |alias_name, real_name|

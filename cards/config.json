@@ -111,6 +111,7 @@
     "krush": "King Krush",
     "jaraxxus": "Lord Jaraxxus",
     "jaraxus": "Lord Jaraxxus",
+    "jaraxes": "Lord Jaraxxus",
     "mekgineer": "Mekgineer Thermaplugg",
     "thermaplugg": "Mekgineer Thermaplugg",
     "kraken": "North Sea Kraken",
@@ -237,6 +238,7 @@
     "coldlight": "Coldlight Oracle",
     "edwin": "Edwin VanCleef",
     "vancleef": "Edwin VanCleef",
+    "evc": "Edwin VanCleef",
     "frothing": "Frothing Berserker",
     "mukla": "King Mukla",
     "mukla's champ": "Mukla's Champion",
@@ -527,6 +529,7 @@
     "hozen": "Hozen Healer",
     "jinyu": "Jinyu Waterspeaker",
     "waterspeaker": "Jinyu Waterspeaker",
+    "potion of sheep": "Potion of Polymorph",
     "poly potion": "Potion of Polymorph",
     "poly pot": "Potion of Polymorph",
     "polymorph potion": "Potion of Polymorph",
@@ -599,6 +602,11 @@
     "first mate": "N'Zoth's First Mate",
     "kt": "Kel'Thuzad",
     "pirate cannon": "Ship's Cannon",
-    "mistress": "Mistress of Mixtures"
+    "mistress": "Mistress of Mixtures",
+    "anub": "Anub'arak",
+    "anub sentinel": "Anubisath Sentinel",
+    "anub sentinal": "Anubisath Sentinel",
+    "ambush": "Beneath the Grounds",
+    "tiny knight": "Tiny Knight of Evil"
   }
 }
