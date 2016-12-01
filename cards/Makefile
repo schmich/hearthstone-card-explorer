@@ -1,7 +1,7 @@
 all: release
 
-upload: release
-	ruby upload-dictionary.rb
+publish: release
+	ruby publish-dictionary.rb
 
 release: dictionary.json
 

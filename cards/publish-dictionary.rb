@@ -22,15 +22,16 @@ end
 
 new = File.read(file).strip
 if current == new
-  raise 'No changes, not uploading.'
+  raise 'No changes, not publishing.'
 else
-  print "Upload version #{version} #{file} (y/n)? "
+  print "Publish version #{version} #{file} (y/n)? "
   response = gets.strip.downcase
 
   if response =~ /^y/
-    puts "Upload #{file}."
+    puts "Publish #{file}."
     system("gist -u #{gist_id} #{file} -f #{version}")
+    puts 'Published.'
   else
-    puts "Not uploading."
+    puts 'Not uploading.'
   end
 end
