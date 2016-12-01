@@ -24,7 +24,7 @@ def fetch_card_ids
   return ids
 end
 
-repo = {
+dict = {
   'cards' => {},
   'aliases' => {},
   'exclude' => {}
@@ -38,7 +38,7 @@ release_image_map = Hash[
   }
 ]
 
-puts 'Build repo.'
+puts 'Build dictionary.'
 
 config = JSON.parse(File.read('config.json'))
 aliases = config['aliases']
@@ -59,8 +59,8 @@ exclude.each do |name|
   end
 end
 
-repo['aliases'] = aliases
-repo['exclude'] = exclude
+dict['aliases'] = aliases
+dict['exclude'] = exclude
 
 # There can be multiple cards with the same name.
 # Since we can't distinguish the duplicates, we only
@@ -88,11 +88,11 @@ cards.each do |card|
     raise "Could not find image for #{name} (#{id})."
   end
 
-  repo['cards'][name] = image
+  dict['cards'][name] = image
 end
 
-open('hearthstone-card-explorer.json', 'w') do |w|
-  w.write(JSON.dump(repo))
+open('dictionary.json', 'w') do |w|
+  w.write(JSON.dump(dict))
 end
 
 puts 'Finished.'

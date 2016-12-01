@@ -1,9 +1,9 @@
 all: release
 
 upload: release
-	ruby upload-repo.rb
+	ruby upload-dictionary.rb
 
-release: hearthstone-card-explorer.json
+release: dictionary.json
 
 rel-metadata.json: fetch-rel-metadata.rb
 	ruby fetch-rel-metadata.rb
@@ -20,5 +20,5 @@ PRE_IMAGES = $(shell find hearthstone-card-images/pre -type f -iname '*.png')
 hearthstone-card-images/cdn-map.json: $(REL_IMAGES) $(PRE_IMAGES)
 	cd hearthstone-card-images && ruby create-cdn-map.rb
 
-hearthstone-card-explorer.json: rel-metadata.json pre-image-map.json config.json hearthstone-card-images/cdn-map.json create-repo.rb
-	ruby create-repo.rb
+dictionary.json: rel-metadata.json pre-image-map.json config.json hearthstone-card-images/cdn-map.json create-dictionary.rb
+	ruby create-dictionary.rb

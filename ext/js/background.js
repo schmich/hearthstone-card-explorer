@@ -133,37 +133,36 @@ function CardSet() {
   };
 
   this.update = function () {
-    let repoUrl = 'https://gist.githubusercontent.com/schmich/390515ea1fb19d6b1cd419b2deb28324/raw';
     let options = { cache: true };
-    qwest.get(repoUrl, null, options).then(function (xhr, resp) {
+    qwest.get(DictionaryUrl, null, options).then(function (xhr, resp) {
       // If cached (304, etc.), do not update index.
       if (xhr.status !== 200) {
         return;
       }
-      let repo = JSON.parse(resp);
-      let entry = { repo: repo };
+      let dict = JSON.parse(resp);
+      let entry = { dict: dict };
       chrome.storage.local.set(entry);
-      buildCardSet(repo);
+      buildCardSet(dict);
     }).catch(function (e, xhr, resp) {
       console.err(e);
     });
   };
 
-  function buildCardSet(repo) {
+  function buildCardSet(dict) {
     self.images = {};
-    self.exclude = new Set(repo.exclude.map(e => normalize(e)));
+    self.exclude = new Set(dict.exclude.map(e => normalize(e)));
     self.maxWordCount = 0;
 
-    for (let realName in repo.cards) {
+    for (let realName in dict.cards) {
       let fuzzyName = normalize(realName);
-      self.images[fuzzyName] = repo.cards[realName];
+      self.images[fuzzyName] = dict.cards[realName];
       self.maxWordCount = Math.max(self.maxWordCount, countSpaces(realName) + 1);
     }
 
-    for (let alias in repo.aliases) {
-      let realName = repo.aliases[alias];
+    for (let alias in dict.aliases) {
+      let realName = dict.aliases[alias];
       let fuzzyAlias = normalize(alias);
-      self.images[fuzzyAlias] = repo.cards[realName];
+      self.images[fuzzyAlias] = dict.cards[realName];
       self.maxWordCount = Math.max(self.maxWordCount, countSpaces(realName) + 1);
     }
   }
@@ -228,11 +227,14 @@ function CardSet() {
   this.exclude = new Set();
   this.maxWordCount = 0;
 
-  chrome.storage.local.get('repo', function (entry) {
-    let repo = entry['repo'];
-    if (repo) {
-      console.log('Using cached repo.');
-      buildCardSet(repo);
+  const DictionaryVersion = 1;
+  const DictionaryUrl = 'https://gist.githubusercontent.com/schmich/6f869b2f7c848f0731e10bea4d08308c/raw/' + DictionaryVersion;
+
+  chrome.storage.local.get('dict', function (entry) {
+    let dict = entry['dict'];
+    if (dict) {
+      console.log('Using cached dictionary.');
+      buildCardSet(dict);
     } else {
       self.update();
     }
