@@ -1,7 +1,7 @@
 all: release
 
 upload: release
-	gist -u 390515ea1fb19d6b1cd419b2deb28324 hearthstone-card-explorer.json
+	ruby upload-repo.rb
 
 release: hearthstone-card-explorer.json
 
