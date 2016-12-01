@@ -136,6 +136,10 @@ function CardSet() {
     let repoUrl = 'https://gist.githubusercontent.com/schmich/390515ea1fb19d6b1cd419b2deb28324/raw';
     let options = { cache: true };
     qwest.get(repoUrl, null, options).then(function (xhr, resp) {
+      // If cached (304, etc.), do not update index.
+      if (xhr.status !== 200) {
+        return;
+      }
       let repo = JSON.parse(resp);
       let entry = { repo: repo };
       chrome.storage.local.set(entry);
@@ -257,7 +261,7 @@ let Cards = new CardSet();
 
 setInterval(function () {
   Cards.update();
-}, 30 * 60 * 1000);
+}, 15 * 60 * 1000);
 
 function tryInject(tab) {
   let urls = [
