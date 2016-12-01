@@ -215,7 +215,7 @@ function CardSet() {
     if (imageUrl.startsWith('https:') || imageUrl.startsWith('http:')) {
       return imageUrl;
     } else {
-      return 'https://cdn.rawgit.com/schmich/hearthstone-card-images/' + imageUrl;
+      return ImageHost + imageUrl;
     }
   }
 
@@ -229,6 +229,7 @@ function CardSet() {
 
   const DictionaryVersion = 1;
   const DictionaryUrl = 'https://gist.githubusercontent.com/schmich/6f869b2f7c848f0731e10bea4d08308c/raw/' + DictionaryVersion;
+  const ImageHost = 'https://cdn.rawgit.com/schmich/hearthstone-card-images/'
 
   chrome.storage.local.get('dict', function (entry) {
     let dict = entry['dict'];
