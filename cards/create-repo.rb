@@ -6,7 +6,7 @@ require 'pp'
 require 'set'
 
 def fetch_card_ids
-  puts 'Fetching card IDs.'
+  puts 'Fetch card IDs.'
 
   json = open('https://api.hearthstonejson.com/v1/latest/enUS/cards.json').read
   cards = JSON.parse(json)
@@ -38,7 +38,7 @@ release_image_map = Hash[
   }
 ]
 
-puts 'Building repo.'
+puts 'Build repo.'
 
 config = JSON.parse(File.read('config.json'))
 aliases = config['aliases']

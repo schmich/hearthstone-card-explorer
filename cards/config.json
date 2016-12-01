@@ -497,6 +497,7 @@
     "bow": "Eaglehorn Bow",
     "imp boss": "Imp Gang Boss",
     "igb": "Imp Gang Boss",
+    "farseer": "Earthen Ring Farseer",
     "erf": "Earthen Ring Farseer",
     "big toad": "Huge Toad",
     "toad": "Huge Toad",
@@ -644,6 +645,10 @@
     "smuggler run": "Smuggler's Run",
     "flamestruck": "Flamestrike",
     "horse rider": "Argent Horserider",
-    "doomslayer": "Doomsayer"
+    "doomslayer": "Doomsayer",
+    "technician": "Blackwing Technician",
+    "black technician": "Blackwing Technician",
+    "bw technician": "Blackwing Technician",
+    "blackwing tech": "Blackwing Technician"
   }
 }
