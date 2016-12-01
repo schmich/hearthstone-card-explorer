@@ -1,9 +1,43 @@
 require 'json'
+require 'json/stream'
 require 'open-uri'
 require 'uri'
 require 'set'
 require 'pp'
 require 'set'
+
+dup_alias_parser = JSON::Stream::Parser.new do
+  aliases = Set.new
+  phase = 0
+  depth = 0
+
+  start_object {
+    if phase == 1
+      phase = 2
+      depth = 1
+    elsif phase == 2
+      depth += 1
+    end
+  }
+
+  end_object {
+    if phase == 2
+      depth -= 1
+    end
+  }
+
+  key { |name|
+    if phase == 0 && name == 'aliases'
+      phase = 1
+    elsif phase == 2 && depth == 1
+      if !aliases.add?(name)
+        raise "Duplicate alias: #{name}."
+      end
+    end
+  }
+end
+
+dup_alias_parser << File.read('config.json')
 
 def fetch_card_ids
   puts 'Fetch card IDs.'
@@ -75,7 +109,7 @@ cards = Hash[
   }
 ].values
 
-cdn_map = JSON.parse(File.read(File.join('hearthstone-card-images', 'cdn-map.json')))
+cdn_map = JSON.parse(File.read(File.join('hearthstone-card-images', 'map.json')))
 cdn_map = Hash[cdn_map.map { |entry| [entry['id'], entry['short_path']] }]
 
 cards.each do |card|
