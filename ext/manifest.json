@@ -9,8 +9,7 @@
   "permissions": [
     "*://*/",
     "tabs",
-    "storage",
-    "unlimitedStorage"
+    "storage"
   ],
   "background": {
     "scripts": ["lib/qwest.min.js", "js/background.js"]
