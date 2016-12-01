@@ -1,5 +1,6 @@
 file = 'dictionary.json'
 gist_id = '6f869b2f7c848f0731e10bea4d08308c'
+expected_version = 1
 
 def find_current_version(gist_id)
   contents = ''
@@ -15,11 +16,15 @@ end
 puts 'Find current dictionary version.'
 current, version = find_current_version(gist_id)
 
+if version != expected_version
+  raise "Current dictionary version (#{version}) is not the expected version (#{expected_version})."
+end
+
 new = File.read(file).strip
 if current == new
   raise 'No changes, not uploading.'
 else
-  print "Upload #{file} as version #{version} (y/n)? "
+  print "Upload version #{version} #{file} (y/n)? "
   response = gets.strip.downcase
 
   if response =~ /^y/
