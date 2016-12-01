@@ -208,6 +208,7 @@
     "chillwind": "Chillwind Yeti",
     "defender": "Defender of Argus",
     "argus": "Defender of Argus",
+    "doa": "Defender of Argus",
     "snobold": "Frigid Snobold",
     "heckler": "Evil Heckler",
     "fandral": "Fandral Staghelm",
@@ -530,7 +531,10 @@
     "poly pot": "Potion of Polymorph",
     "polymorph potion": "Potion of Polymorph",
     "blackcrystal potion": "Blastcrystal Potion",
+    "blastcrystal pot": "Blastcrystal Potion",
+    "blastchrystal pot": "Blastcrystal Potion",
     "blastcrystal": "Blastcrystal Potion",
+    "blastchrystal": "Blastcrystal Potion",
     "dragonfire": "Dragonfire Potion",
     "felfire": "Felfire Potion",
     "pint-sized potion": "Pint-Size Potion",
@@ -594,6 +598,7 @@
     "gadgeteer": "Grimy Gadgeteer",
     "first mate": "N'Zoth's First Mate",
     "kt": "Kel'Thuzad",
-    "pirate cannon": "Ship's Cannon"
+    "pirate cannon": "Ship's Cannon",
+    "mistress": "Mistress of Mixtures"
   }
 }

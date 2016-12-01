@@ -1,4 +1,9 @@
-all: hearthstone-card-explorer.json
+all: release
+
+upload: release
+	gist -u 390515ea1fb19d6b1cd419b2deb28324 hearthstone-card-explorer.json
+
+release: hearthstone-card-explorer.json
 
 rel-metadata.json: fetch-rel-metadata.rb
 	ruby fetch-rel-metadata.rb
