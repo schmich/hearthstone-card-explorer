@@ -220,7 +220,7 @@ function CardSet() {
   }
 
   function removeBrackets(text) {
-    return text.replace(/^(\s*)\[\[(.*)\]\](\s*)/, '$1$2$3');
+    return text.replace(/^(\s*)\[?\[(.*)\]?\](\s*)/, '$1$2$3');
   }
 
   this.images = {};
