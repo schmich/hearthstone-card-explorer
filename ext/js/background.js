@@ -243,11 +243,7 @@ function CardSet() {
 }
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-  setTimeout(function () {
-    sendResponse(Cards.detect(request.detect));
-  }, 0);
-
-  return true;
+  sendResponse(Cards.detect(request.detect));
 });
 
 chrome.runtime.onInstalled.addListener(function () {
