@@ -1,5 +1,5 @@
 {
-  "exclude": [
+  "explicit": [
     "Rock",
     "Cheat",
     "No Way!",
@@ -29,7 +29,15 @@
     "Barrel",
     "Sheep",
     "Crush",
-    "NOOOOOOOOOOOO"
+    "NOOOOOOOOOOOO",
+    "Get 'em!",
+    "Dispel",
+    "Stomp",
+    "Death",
+    "Pain",
+    "Darkness",
+    "Nightmare",
+    "Recharge"
   ],
   "aliases": {
     "po": "Power Overwhelming",
@@ -124,6 +132,7 @@
     "emperor": "Emperor Thaurissan",
     "elise": "Elise Starseeker",
     "leeroy": "Leeroy Jenkins",
+    "jenkins": "Leeroy Jenkins",
     "faceless": "Faceless Manipulator",
     "bloodmage": "Bloodmage Thalnos",
     "thalnos": "Bloodmage Thalnos",
@@ -137,6 +146,7 @@
     "yasharaj": "Y'Shaarj, Rage Unbound",
     "rafaam": "Arch-Thief Rafaam",
     "krush": "King Krush",
+    "juraxxus": "Lord Jaraxxus",
     "jaraxxus": "Lord Jaraxxus",
     "jaraxus": "Lord Jaraxxus",
     "jaraxes": "Lord Jaraxxus",
@@ -329,9 +339,13 @@
     "tfb": "Thing from Below",
     "anyfin": "Anyfin Can Happen",
     "everyfin": "Everyfin is Awesome",
+    "doctor boom": "Dr. Boom",
     "boom": "Dr. Boom",
+    "doctor 7": "Dr. Boom",
     "dr 7": "Dr. Boom",
+    "doctor balanced": "Dr. Boom",
     "dr balanced": "Dr. Boom",
+    "doctor 6": "Mysterious Challenger",
     "dr 6": "Mysterious Challenger",
     "mc": "Mysterious Challenger",
     "challenger": "Mysterious Challenger",
@@ -342,6 +356,7 @@
     "foe reaper": "Foe Reaper 4000",
     "genzo": "Genzo, the Shark",
     "shark": "Genzo, the Shark",
+    "card shark": "Genzo, the Shark",
     "hobart": "Hobart Grapplehammer",
     "grapplehammer": "Hobart Grapplehammer",
     "hoggenfogger": "Mayor Noggenfogger",
@@ -414,8 +429,10 @@
     "tunneller": "Weasel Tunneler",
     "weasel": "Weasel Tunneler",
     "tunneler": "Weasel Tunneler",
-    "aya": "Aya Blackpaw",
+    "aiya blackpaw": "Aya Blackpaw",
     "blackpaw": "Aya Blackpaw",
+    "aiya": "Aya Blackpaw",
+    "aya": "Aya Blackpaw",
     "patron": "Grim Patron",
     "rivendare": "Baron Rivendare",
     "talonpriest": "Kabal Talonpriest",
@@ -582,7 +599,6 @@
     "villager": "Possessed Villager",
     "silverware": "Silverware Golem",
     "intellect": "Arcane Intellect",
-    "shout": "Commanding Shout",
     "rocketeer": "Reckless Rocketeer",
     "djinni": "Djinni of Zephyrs",
     "ae": "Arcane Explosion",
@@ -706,6 +722,7 @@
     "grimy gadget": "Grimy Gadgeteer",
     "gadgeteer": "Grimy Gadgeteer",
     "first mate": "N'Zoth's First Mate",
+    "n'zoth's mate": "N'Zoth's First Mate",
     "kt": "Kel'Thuzad",
     "pirate cannon": "Ship's Cannon",
     "mistress": "Mistress of Mixtures",
@@ -792,6 +809,10 @@
     "recruits": "Small-Time Recruits",
     "str": "Small-Time Recruits",
     "grimstreet protector": "Grimestreet Protector",
-    "grimstreet enforcer": "Grimestreet Enforcer"
+    "grimstreet enforcer": "Grimestreet Enforcer",
+    "rivendere": "Baron Rivendare",
+    "noz": "Nozdormu",
+    "river croc": "River Crocolisk",
+    "experimenter": "Gnomish Experimenter"
   }
 }

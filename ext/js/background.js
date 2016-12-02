@@ -48,7 +48,7 @@ function CardSet() {
       }
     }
 
-    if (self.exclude.has(name)) {
+    if (self.explicit.has(name)) {
       let isBracketed = (text[0] === '[' && text[1] === '[');
       if (!isBracketed) {
         return false;
@@ -150,7 +150,7 @@ function CardSet() {
 
   function buildCardSet(dict) {
     self.images = {};
-    self.exclude = new Set(dict.exclude.map(e => normalize(e)));
+    self.explicit = new Set(dict.explicit.map(e => normalize(e)));
     self.maxWordCount = 0;
 
     for (let realName in dict.cards) {
@@ -224,7 +224,7 @@ function CardSet() {
   }
 
   this.images = {};
-  this.exclude = new Set();
+  this.explicit = new Set();
   this.maxWordCount = 0;
 
   const DictionaryVersion = 1;
