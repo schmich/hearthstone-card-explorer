@@ -3,7 +3,7 @@
 }
 [data-hsce-img]:hover {
   color: #333;
-  background: #ffffd0;
+  background: rgba(255, 255, 200, 0.5);
 }
 .hsce-preload {
   opacity: 0;
@@ -27,13 +27,17 @@
 #hsce-card.hsce-active {
   opacity: 1;
 }
-@keyframes hsceNodeInsertEvent {  
+@keyframes hsceNodeInsertEvent {
   from { }
   to { }  
 }
 [data-author="hearthscan-bot"] {
   display: none !important;
 }
-[data-type="comment"]:not([data-author="hearthscan-bot"]) .usertext-body {
+.chat-display .chat-lines .chat-line .message span[data-hsce-img] {
+  padding-right: 0 !important;
+}
+[data-type="comment"]:not([data-author="hearthscan-bot"]) .usertext-body,
+.chat-display .chat-lines .chat-line .message {
   animation-name: hsceNodeInsertEvent;
 }
