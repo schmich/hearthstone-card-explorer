@@ -1,11 +1,8 @@
 require 'json'
 require 'open-uri'
 
-def fetch_card_ids
-  puts 'Fetch card IDs.'
-
-  json = open('https://api.hearthstonejson.com/v1/latest/enUS/cards.json').read
-  cards = JSON.parse(json)
+def create_card_ids
+  cards = JSON.parse(File.read('card-ids.json'))
 
   ids = {}
   cards.each do |card|
@@ -20,7 +17,7 @@ def fetch_card_ids
   return ids
 end
 
-card_ids = fetch_card_ids
+card_ids = create_card_ids
 
 # There can be multiple cards with the same name.
 # Since we can't distinguish the duplicates, we only

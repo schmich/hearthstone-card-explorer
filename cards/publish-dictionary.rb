@@ -1,5 +1,5 @@
 file = 'dictionary.json'
-gist_id = '6f869b2f7c848f0731e10bea4d08308c'
+gist_id = '42fd24ab7347de93a38ea113e35cfe9b'
 expected_version = 1
 
 def find_current_version(gist_id)

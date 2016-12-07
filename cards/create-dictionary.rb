@@ -1,6 +1,5 @@
 require 'json'
 require 'json/stream'
-require 'open-uri'
 require 'uri'
 require 'set'
 require 'pp'
@@ -39,11 +38,8 @@ end
 
 dup_alias_parser << File.read('config.json')
 
-def fetch_card_ids
-  puts 'Fetch card IDs.'
-
-  json = open('https://api.hearthstonejson.com/v1/latest/enUS/cards.json').read
-  cards = JSON.parse(json)
+def create_card_ids
+  cards = JSON.parse(File.read('card-ids.json'))
 
   ids = {}
   cards.each do |card|
@@ -61,10 +57,10 @@ end
 dict = {
   'cards' => {},
   'aliases' => {},
-  'exclude' => {}
+  'explicit' => {}
 }
 
-card_ids = fetch_card_ids
+card_ids = create_card_ids
 prerelease_image_map = JSON.parse(File.read('pre-image-map.json'))
 release_image_map = Hash[
   card_ids.map { |name, id|
@@ -86,15 +82,15 @@ aliases.each do |alias_name, real_name|
   end
 end
 
-exclude = config['exclude']
-exclude.each do |name|
+explicit = config['explicit']
+explicit.each do |name|
   if !card_ids.include?(name) && !aliases.keys.map(&:downcase).include?(name.downcase)
     raise "Exclusion '#{name}' does not match any card or alias."
   end
 end
 
 dict['aliases'] = aliases
-dict['exclude'] = exclude
+dict['explicit'] = explicit
 
 # There can be multiple cards with the same name.
 # Since we can't distinguish the duplicates, we only
@@ -110,7 +106,7 @@ cards = Hash[
 ].values
 
 cdn_map = JSON.parse(File.read(File.join('hearthstone-card-images', 'map.json')))
-cdn_map = Hash[cdn_map.map { |entry| [entry['id'], entry['short_path']] }]
+cdn_map = Hash[cdn_map.map { |entry| [entry['id'], entry['path']] }]
 
 cards.each do |card|
   name = card['name']
