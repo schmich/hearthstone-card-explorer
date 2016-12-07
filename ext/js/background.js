@@ -2,7 +2,7 @@ let Cards = new CardSet();
 
 function tryUpdateDictionary() {
   const dictionaryVersion = 1;
-  const dictionaryUrl = 'https://gist.githubusercontent.com/schmich/42fd24ab7347de93a38ea113e35cfe9b/raw/' + DictionaryVersion;
+  const dictionaryUrl = 'https://gist.githubusercontent.com/schmich/42fd24ab7347de93a38ea113e35cfe9b/raw/' + dictionaryVersion;
 
   let options = { cache: true };
   qwest.get(dictionaryUrl, null, options).then(function (xhr, resp) {
