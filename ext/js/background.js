@@ -62,10 +62,8 @@ function tryInject(tab) {
   tab.hsceInjected = true;
 
   chrome.tabs.insertCSS(tab.id, { file: 'css/style.css', runAt: 'document_start' }, function () {
-    chrome.tabs.executeScript(tab.id, { file: 'lib/ScrollMonitor.js', runAt: 'document_end' }, function () {
-      chrome.tabs.executeScript(tab.id, { file: 'js/inject.js', runAt: 'document_end' }, function () {
-        // Injected.
-      });
+    chrome.tabs.executeScript(tab.id, { file: 'js/inject.js', runAt: 'document_end' }, function () {
+      // Injected.
     });
   });
 }

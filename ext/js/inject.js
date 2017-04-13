@@ -5,16 +5,18 @@ function onInject() {
   cardImage.setAttribute('id', 'hsce-card');
   document.body.appendChild(cardImage);
 
+  let callback = function (entries, observer) {
+    for (let entry of entries) {
+      detectCards(entry.target);
+      observer.unobserve(entry.target);
+    }
+  };
+
+  let observer = new IntersectionObserver(callback);
+
   let elements = document.querySelectorAll('[data-type="comment"] .usertext-body, [data-type="link"] .usertext-body, .TopicPost-bodyContent');
   for (let element of elements) {
-    let watcher = scrollMonitor.create(element, 200);
-    (function (element) {
-      watcher.enterViewport(function () {
-        detectCards(element);
-        this.destroy();
-        watcher = null;
-      });
-    })(element);
+    observer.observe(element);
   }
 
   let twitchObserver = new MutationObserver(function (mutations) {
