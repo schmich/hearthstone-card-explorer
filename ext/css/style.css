@@ -27,17 +27,9 @@
 #hsce-card.hsce-active {
   opacity: 1;
 }
-@keyframes hsceNodeInsertEvent {
-  from { }
-  to { }  
-}
 [data-author="hearthscan-bot"] {
   display: none !important;
 }
 .chat-display .chat-lines .chat-line .message span[data-hsce-img] {
   padding-right: 0 !important;
-}
-[data-type="comment"]:not([data-author="hearthscan-bot"]) .usertext-body,
-.chat-display .chat-lines .chat-line .message {
-  animation-name: hsceNodeInsertEvent;
 }

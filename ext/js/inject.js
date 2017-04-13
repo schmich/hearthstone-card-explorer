@@ -17,14 +17,40 @@ function onInject() {
     })(element);
   }
 
-  document.addEventListener('animationstart', function (e) {
-    if (e.animationName === 'hsceNodeInsertEvent') {
-      detectCards(e.target);
+  let twitchObserver = new MutationObserver(function (mutations) {
+    for (let mutation of mutations) {
+      for (let node of mutation.addedNodes) {
+        if (node.nodeType === 1 && node.classList.contains('chat-line')) {
+          for (let child of node.querySelectorAll('.message')) {
+            detectCards(child);
+          }
+        }
+      }
     }
   });
+
+  let redditObserver = new MutationObserver(function (mutations) {
+    for (let mutation of mutations) {
+      for (let node of mutation.addedNodes) {
+        if (node.nodeType === 1 && node.classList.contains('comment')) {
+          for (let child of node.querySelectorAll('.usertext-body')) {
+            detectCards(child);
+          }
+        }
+      }
+    }
+  });
+
+  let chat = document.querySelector('.chat-display .chat-lines');
+  if (chat) {
+    twitchObserver.observe(chat, { childList: true });
+  }
+
+  let body = document.querySelector('body');
+  redditObserver.observe(body, { childList: true, subtree: true });
 }
 
-function textNodesUnder(node){
+function textNodesUnder(node) {
   function collect(node, acc) {
     for (node = node.firstChild; node; node = node.nextSibling){
       if (node.nodeType == 3 && node.textContent.trim() !== "") {
@@ -57,18 +83,16 @@ function detectCards(element) {
   let textNodes = textNodesUnder(element);
   for (let textNode of textNodes) {
     (function (node) {
-      let text = node.textContent;
+      let text = node.data;
       chrome.runtime.sendMessage({ detect: text }, function (matches) {
         let targets = [];
 
         for (let match of matches) {
-          let [text, start, end, imageUrl] = match;
-
+          let [insertText, start, end, imageUrl] = match;
           let range = document.createRange();
           range.setStart(node, start);
           range.setEnd(node, end);
-
-          targets.push([range, text, imageUrl]);
+          targets.push([range, insertText, imageUrl]);
           preloadImage(imageUrl);
         }
 
