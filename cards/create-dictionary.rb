@@ -5,6 +5,10 @@ require 'set'
 require 'pp'
 require 'set'
 
+def normalize(name)
+  name.downcase.gsub(/[^a-z]+/, '-').strip
+end
+
 dup_alias_parser = JSON::Stream::Parser.new do
   aliases = Set.new
   phase = 0
@@ -38,7 +42,7 @@ end
 
 dup_alias_parser << File.read('config.json')
 
-def create_card_ids
+def create_card_ids(prerelease_card_names)
   cards = JSON.parse(File.read('card-ids.json'))
 
   ids = {}
@@ -51,6 +55,10 @@ def create_card_ids
     end
   end
 
+  prerelease_card_names.each do |name|
+    ids[name] = normalize(name)
+  end
+
   return ids
 end
 
@@ -60,8 +68,9 @@ dict = {
   'explicit' => {}
 }
 
-card_ids = create_card_ids
 prerelease_image_map = JSON.parse(File.read('pre-image-map.json'))
+card_ids = create_card_ids(prerelease_image_map.keys)
+
 release_image_map = Hash[
   card_ids.map { |name, id|
     [name, File.join('rel', "#{id}.png")]
@@ -103,17 +112,21 @@ cards = Hash[
   }.sort_by { |_, card|
     card['collectible'] ? 1 : 0
   }
-].values
+].values + prerelease_image_map.keys
 
-cdn_map = JSON.parse(File.read(File.join('hearthstone-card-images', 'images.json')))
-cdn_map = Hash[cdn_map.map { |entry| [entry['id'], entry['path']] }]
+image_map = JSON.parse(File.read(File.join('hearthstone-card-images', 'images.json')))
+image_map = Hash[image_map.map { |entry| [entry['id'], entry['path']] }]
 
 cards.each do |card|
-  name = card['name']
-  next if ['hero power', 'hero'].include?(card['type'])
+  if card.is_a? String
+    name = card
+  else
+    name = card['name']
+    next if ['hero power', 'hero'].include?(card['type'])
+  end
 
   id = card_ids[name]
-  image = cdn_map[id]
+  image = image_map[id]
   if !image
     raise "Could not find image for #{name} (#{id})."
   end
