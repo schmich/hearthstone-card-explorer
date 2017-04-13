@@ -20,8 +20,8 @@ card-ids.json: fetch-card-ids.rb
 REL_IMAGES = $(shell find hearthstone-card-images/rel -type f -iname '*.png')
 PRE_IMAGES = $(shell find hearthstone-card-images/pre -type f -iname '*.png')
 
-hearthstone-card-images/map.json: $(REL_IMAGES) $(PRE_IMAGES)
-	cd hearthstone-card-images && ruby create-map.rb
+hearthstone-card-images/images.json: $(REL_IMAGES) $(PRE_IMAGES)
+	cd hearthstone-card-images && ruby create-images.rb
 
-dictionary.json: card-ids.json rel-metadata.json pre-image-map.json config.json hearthstone-card-images/map.json create-dictionary.rb
+dictionary.json: card-ids.json rel-metadata.json pre-image-map.json config.json hearthstone-card-images/images.json create-dictionary.rb
 	ruby create-dictionary.rb
