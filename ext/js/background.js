@@ -46,7 +46,7 @@ chrome.runtime.onInstalled.addListener(function () {
 
 function tryInject(tab) {
   let urls = [
-    /^https?:\/\/www\.reddit\.com\/r\/(hearthstone|competitivehs|customhearthstone|hearthstonecirclejerk|thehearth|arenahs|hstournaments|hearthdecklists|hscoaching|hspulls|12winarenalog|hearthstonevods|wildhearthstone)\/comments\//i,
+    /^https?:\/\/www\.reddit\.com\/r\/(hearthstone|competitivehs|customhearthstone|hearthstonecirclejerk|thehearth|arenahs|hstournaments|hearthdecklists|hscoaching|hspulls|12winarenalog|hearthstonevods|wildhearthstone|pauperhs)\/comments\//i,
     /^https?:\/\/.*\.battle\.net\/forums\/[^\\]+\/hearthstone\/topic/i,
     /^https?:\/\/www\.twitch\.tv\/.+/i
   ];

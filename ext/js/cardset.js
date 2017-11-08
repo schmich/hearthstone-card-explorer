@@ -18,6 +18,7 @@ function CardSet() {
         }
         part += phrase[i];
       } else if (part !== null) {
+        // TODO: Use JavaScript Set instead of indexOf.
         if (['the', 'a', 'an', 'in', 'on', 'of', 'to'].indexOf(part) < 0) {
           let end = i - 1;
           let newPart = '';
