@@ -56,7 +56,11 @@ function CardSet() {
       }
     }
 
-    return image || false;
+    return image ? toUrl(image) : false;
+  }
+
+  function toUrl(dbfId) {
+    return chrome.runtime.getURL(`cards/${dbfId}.webp`);
   }
 
   this.debug = function (phrase) {
@@ -121,9 +125,8 @@ function CardSet() {
 
         let startIndex = starts[start];
         let endIndex = ends[end - 1] + 1;
-        let url = absoluteImageUrl(imageUrl);
         let newText = removeBrackets(phrase.substring(startIndex, endIndex)).trim();
-        matches.push([newText, startIndex, endIndex, url]);
+        matches.push([newText, startIndex, endIndex, imageUrl]);
 
         start = end - 1;
         break;
@@ -145,10 +148,9 @@ function CardSet() {
     }
 
     for (let alias in dict.aliases) {
-      let realName = dict.aliases[alias];
       let fuzzyAlias = normalize(alias);
-      self.images[fuzzyAlias] = dict.cards[realName];
-      self.maxWordCount = Math.max(self.maxWordCount, countSpaces(realName) + 1);
+      self.images[fuzzyAlias] = dict.aliases[alias];
+      self.maxWordCount = Math.max(self.maxWordCount, countSpaces(fuzzyAlias) + 1);
     }
   };
 
@@ -196,14 +198,6 @@ function CardSet() {
     }
   }
 
-  function absoluteImageUrl(imageUrl) {
-    if (imageUrl.startsWith('https:') || imageUrl.startsWith('http:')) {
-      return imageUrl;
-    } else {
-      return ImageHost + imageUrl;
-    }
-  }
-
   function removeBrackets(text) {
     return text.replace(/^(\s*)\[?\[(.*?)\]\]?(\s*)/, '$1$2$3');
   }
@@ -211,8 +205,6 @@ function CardSet() {
   this.images = {};
   this.explicit = new Set();
   this.maxWordCount = 0;
-
-  const ImageHost = 'https://cdn.rawgit.com/schmich/hearthstone-card-images/'
 }
 
 if (typeof module !== 'undefined') {

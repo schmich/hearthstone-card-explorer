@@ -68,19 +68,6 @@ function textNodesUnder(node) {
   return nodes;
 }
 
-function preloadImage(imageUrl) {
-  preloadImage.loaded = preloadImage.loaded || {};
-  if (preloadImage.loaded[imageUrl]) {
-    return;
-  }
-
-  let e = document.createElement('img');
-  e.classList.add('hsce-preload');
-  e.setAttribute('src', imageUrl);
-  preloadImage.loaded[imageUrl] = true;
-  document.body.appendChild(e);
-}
-
 function detectCards(element) {
   let textNodes = textNodesUnder(element);
   for (let textNode of textNodes) {
@@ -95,7 +82,6 @@ function detectCards(element) {
           range.setStart(node, start);
           range.setEnd(node, end);
           targets.push([range, insertText, imageUrl]);
-          preloadImage(imageUrl);
         }
 
         createTargets(targets);

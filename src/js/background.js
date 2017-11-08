@@ -1,35 +1,27 @@
 let Cards = new CardSet();
 
-function tryUpdateDictionary() {
-  const dictionaryVersion = 1;
-  const dictionaryUrl = 'https://gist.githubusercontent.com/schmich/42fd24ab7347de93a38ea113e35cfe9b/raw/' + dictionaryVersion;
+async function readExtensionFile(file) {
+  return new Promise((resolve, reject) => {
+    let xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState === 4) {
+        resolve(xhr.responseText);
+      }
+    };
 
-  let options = { cache: true };
-  qwest.get(dictionaryUrl, null, options).then(function (xhr, resp) {
-    // If cached (304, etc.), do not update index.
-    if (xhr.status !== 200) {
-      return;
-    }
-    let dict = JSON.parse(resp);
-    let entry = { dict: dict };
-    chrome.storage.local.set(entry);
-    Cards.update(dict);
-  }).catch(function (e, xhr, resp) {
-    console.err(e);
+    xhr.onerror = error => reject(error);
+
+    const url = chrome.runtime.getURL(file);
+    xhr.open('GET', url, true);
+    xhr.send(null);
   });
 }
 
-chrome.storage.local.get('dict', function (entry) {
-  let dict = entry['dict'];
-  if (dict) {
-    console.log('Using cached dictionary.');
-    Cards.update(dict)
-  } else {
-    tryUpdateDictionary();
-  }
-});
-
-setInterval(tryUpdateDictionary, 15 * 60 * 1000);
+async function loadDictionary() {
+  let contents = await readExtensionFile('dictionary.json');
+  Cards.update(JSON.parse(contents));
+  console.log('dictionary.json loaded.');
+}
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   sendResponse(Cards.detect(request.detect));
@@ -77,3 +69,4 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
 });
 
 console.log('Extension loaded.');
+loadDictionary();
