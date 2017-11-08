@@ -1,7 +1,7 @@
 {
   "name": "Hearthstone Card Explorer",
   "short_name": "Hearthstone Card Explorer",
-  "version": "1.0.0",
+  "version": "1",
   "manifest_version": 2,
   "description": "",
   "author": "Chris Schmich <schmch@gmail.com>",
@@ -22,5 +22,6 @@
   "page_action": {
     "default_icon": "icons/page-action.png"
   },
+  "minimum_chrome_version": "55",
   "content_security_policy": "script-src 'self'; object-src 'self'"
 }
