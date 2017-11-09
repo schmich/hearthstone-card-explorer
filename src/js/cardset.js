@@ -1,55 +1,112 @@
-function CardSet() {
-  let self = this;
-
-  function tokenize(phrase) {
-    phrase = phrase.toLowerCase();
-    let starts = [];
-    let ends = [];
-    let parts = [];
-
-    let part = null;
-    let start = 0;
-    for (let i = 0; i <= phrase.length; ++i) {
-      let code = phrase.charCodeAt(i);
-      if ((code >= 97 && code <= 122) || (code >= 48 && code <= 57) || code == 91 || code == 93) {
-        if (part === null) {
-          part = '';
-          start = i;
-        }
-        part += phrase[i];
-      } else if (part !== null) {
-        // TODO: Use JavaScript Set instead of indexOf.
-        if (['the', 'a', 'an', 'in', 'on', 'of', 'to'].indexOf(part) < 0) {
-          let end = i - 1;
-          let newPart = '';
-          if ((newPart = part.replace(/^\dx/, '')) && (newPart !== part)) {
-            part = newPart;
-            start += 2;
-          } else if ((newPart = part.replace(/x\d$/, '')) && (newPart !== part)) {
-            part = newPart;
-            end -= 2;
-          }
-          starts.push(start);
-          ends.push(end);
-          parts.push(part);
-        }
-        part = null;
-      }
+function countSpaces(s) {
+  let count = 0;
+  for (let c of s) {
+    if (c === ' ') {
+      ++count;
     }
-
-    return [starts, ends, parts];
   }
 
-  function findImage(text) {
+  return count;
+}
+
+function normalize(s) {
+  return s.toLowerCase()
+    .replace(/\b(the|a|an|in|on|of|to)\b/g, '')
+    .replace(/[^a-z0-9]+/g, '')
+    .replace(/(.)\1/g, '$1');
+}
+
+function* fuzzyNames(name) {
+  let norm = normalize(name);
+  yield norm;
+  for (let stem of stems(norm)) {
+    yield stem;
+  }
+}
+
+function removeBrackets(text) {
+  return text.replace(/^(\s*)\[?\[(.*?)\]\]?(\s*)/, '$1$2$3');
+}
+
+function* stems(s) {
+  if (s.length >= 6 && s.endsWith('ing')) {
+    yield s.slice(0, -3);
+  }
+
+  if (s.length >= 4 && s.endsWith('s')) {
+    yield s.slice(0, -1);
+  }
+
+  if (s.length >= 5 && s.endsWith('es')) {
+    yield s.slice(0, -2);
+  }
+
+  if (s.length >= 5 && s.endsWith('ed')) {
+    yield s.slice(0, -2);
+  }
+}
+
+function tokenize(phrase) {
+  phrase = phrase.toLowerCase();
+  let starts = [];
+  let ends = [];
+  let parts = [];
+
+  let part = null;
+  let start = 0;
+  for (let i = 0; i <= phrase.length; ++i) {
+    let code = phrase.charCodeAt(i);
+    if ((code >= 97 && code <= 122) || (code >= 48 && code <= 57) || code == 91 || code == 93) {
+      if (part === null) {
+        part = '';
+        start = i;
+      }
+      part += phrase[i];
+    } else if (part !== null) {
+      // TODO: Use JavaScript Set instead of indexOf.
+      if (['the', 'a', 'an', 'in', 'on', 'of', 'to'].indexOf(part) < 0) {
+        let end = i - 1;
+        let newPart = '';
+        if ((newPart = part.replace(/^\dx/, '')) && (newPart !== part)) {
+          part = newPart;
+          start += 2;
+        } else if ((newPart = part.replace(/x\d$/, '')) && (newPart !== part)) {
+          part = newPart;
+          end -= 2;
+        }
+        starts.push(start);
+        ends.push(end);
+        parts.push(part);
+      }
+      part = null;
+    }
+  }
+
+  return [starts, ends, parts];
+}
+
+function toUrl(dbfId) {
+  return chrome.runtime.getURL(`cards/${dbfId}.webp`);
+}
+
+class CardSet
+{
+  constructor() {
+    this.images = {};
+    this.explicit = new Set();
+    this.maxWordCount = 0;
+  }
+
+  _findImage(text) {
     let image, name = null;
     for (name of fuzzyNames(text)) {
-      image = self.images[name];
+      image = this.images[name];
       if (image) {
         break;
       }
     }
 
-    if (self.explicit.has(name)) {
+    if (this.explicit.has(name)) {
       let isBracketed = (text[0] === '[' && text[1] === '[');
       if (!isBracketed) {
         return false;
@@ -59,11 +116,7 @@ function CardSet() {
     return image ? toUrl(image) : false;
   }
 
-  function toUrl(dbfId) {
-    return chrome.runtime.getURL(`cards/${dbfId}.webp`);
-  }
-
-  this.debug = function (phrase) {
+  debug(phrase) {
     function replace(s, left, right, text) {
       return s.substr(0, left) + text + s.substr(right);
     }
@@ -110,15 +163,15 @@ function CardSet() {
     console.log(`-> ${resultPhrase}`);
   }
 
-  this.detect = function (phrase) {
+  detect(phrase) {
     let matches = [];
 
     let [starts, ends, parts] = tokenize(phrase);
 
     for (let start = 0; start < parts.length; ++start) {
-      for (let end = Math.min(parts.length, start + self.maxWordCount); end > start; --end) {
+      for (let end = Math.min(parts.length, start + this.maxWordCount); end > start; --end) {
         let text = parts.slice(start, end).join(' ');
-        var imageUrl = findImage(text);
+        var imageUrl = this._findImage(text);
         if (!imageUrl) {
           continue;
         }
@@ -134,77 +187,25 @@ function CardSet() {
     }
 
     return matches;
-  };
+  }
 
-  this.update = function (dict) {
-    self.images = {};
-    self.explicit = new Set(dict.explicit.map(e => normalize(e)));
-    self.maxWordCount = 0;
+  update(dict) {
+    this.images = {};
+    this.explicit = new Set(dict.explicit.map(e => normalize(e)));
+    this.maxWordCount = 0;
 
     for (let realName in dict.cards) {
       let fuzzyName = normalize(realName);
-      self.images[fuzzyName] = dict.cards[realName];
-      self.maxWordCount = Math.max(self.maxWordCount, countSpaces(realName) + 1);
+      this.images[fuzzyName] = dict.cards[realName];
+      this.maxWordCount = Math.max(this.maxWordCount, countSpaces(realName) + 1);
     }
 
     for (let alias in dict.aliases) {
       let fuzzyAlias = normalize(alias);
-      self.images[fuzzyAlias] = dict.aliases[alias];
-      self.maxWordCount = Math.max(self.maxWordCount, countSpaces(fuzzyAlias) + 1);
-    }
-  };
-
-  function countSpaces(s) {
-    let count = 0;
-    for (let c of s) {
-      if (c === ' ') {
-        ++count;
-      }
-    }
-
-    return count;
-  }
-
-  function normalize(s) {
-    return s.toLowerCase()
-      .replace(/\b(the|a|an|in|on|of|to)\b/g, '')
-      .replace(/[^a-z0-9]+/g, '')
-      .replace(/(.)\1/g, '$1');
-  }
-
-  function* fuzzyNames(name) {
-    let norm = normalize(name);
-    yield norm;
-    for (let stem of stems(norm)) {
-      yield stem;
+      this.images[fuzzyAlias] = dict.aliases[alias];
+      this.maxWordCount = Math.max(this.maxWordCount, countSpaces(fuzzyAlias) + 1);
     }
   }
-  
-  function* stems(s) {
-    if (s.length >= 6 && s.endsWith('ing')) {
-      yield s.slice(0, -3);
-    }
-
-    if (s.length >= 4 && s.endsWith('s')) {
-      yield s.slice(0, -1);
-    }
-
-    if (s.length >= 5 && s.endsWith('es')) {
-      yield s.slice(0, -2);
-    }
-
-    if (s.length >= 5 && s.endsWith('ed')) {
-      yield s.slice(0, -2);
-    }
-  }
-
-  function removeBrackets(text) {
-    return text.replace(/^(\s*)\[?\[(.*?)\]\]?(\s*)/, '$1$2$3');
-  }
-
-  this.images = {};
-  this.explicit = new Set();
-  this.maxWordCount = 0;
 }
 
 if (typeof module !== 'undefined') {
